@@ -68,14 +68,17 @@ fun HomeScreen() {
                 ) {
                     IconButton(
                         onClick = {
-                            Toast.makeText(context, "Texte: $textState", Toast.LENGTH_SHORT).show()
+                            if (textState.isNotBlank()) {
+                                Toast.makeText(context, "Texte: $textState", Toast.LENGTH_SHORT).show()
+                            }
                         },
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(36.dp),
+                        enabled = textState.isNotBlank()
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrowforward),
                             contentDescription = "Send",
-                            tint = Color.White
+                            tint = if (textState.isNotBlank()) Color.White else Color.Gray
                         )
                     }
                 }

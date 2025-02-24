@@ -4,6 +4,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import fr.isen.lucas.isensmartcompanion.R
 
 @Composable
@@ -29,3 +32,4 @@ fun BottomNavigationBar(navController: NavHostController) {
         )
     }
 }
+

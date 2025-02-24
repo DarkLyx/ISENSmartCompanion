@@ -1,75 +1,69 @@
 package fr.isen.lucas.isensmartcompanion.screens
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.res.colorResource
+import androidx.navigation.NavController
+import com.google.gson.Gson
 import fr.isen.lucas.isensmartcompanion.R
+import fr.isen.lucas.isensmartcompanion.models.Event
 
 @Composable
-fun EventsScreen() {
+fun EventsScreen(navController: NavController) {
     val events = listOf(
-        "Soirée BDE",
-        "Gala ISEN",
-        "Journée de Cohésion",
-        "Hackathon ISEN",
-        "Conférence Tech",
-        "Sortie Karting",
-        "Tournoi e-Sport"
+        Event(1, "Soirée BDE", "Une soirée inoubliable organisée par le BDE !", "15 Mars 2025", "ISEN Toulon"),
+        Event(2, "Gala ISEN", "Le gala annuel de l'ISEN avec une ambiance chic et festive.", "25 Juin 2025", "Hôtel de Ville"),
+        Event(3, "Journée de Cohésion", "Une journée d'activités pour renforcer l'esprit d'équipe.", "5 Septembre 2025", "Parc Naturel"),
+        Event(4, "Hackathon ISEN", "Un hackathon intense de 48h pour innover en tech.", "12 Octobre 2025", "Campus ISEN"),
+        Event(5, "Tournoi e-Sport", "Compétition gaming avec des équipes de l'ISEN.", "20 Novembre 2025", "Salle de jeux"),
     )
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.pink_background)),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
             Text(
                 text = "Événements ISEN",
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)
-            ) {
+            LazyColumn {
                 items(events) { event ->
-                    EventItem(event)
+                    EventItem(event) {
+                        // Sérialiser l'événement en JSON avec Gson
+                        val eventJson = Gson().toJson(event)
+                        // Naviguer vers l'écran de détails avec l'événement
+                        navController.navigate("eventDetails/$eventJson")
+                    }
                 }
             }
         }
 
+        // Ajouter le bouton flottant "+" en bas à droite de l'écran
         FloatingActionButton(
-            onClick = { /* Action à définir */ },
+            onClick = { /* Action pour ajouter un événement */ },
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .align(Alignment.BottomEnd)  // Positionner le bouton en bas à droite
                 .padding(16.dp),
             containerColor = Color.Red
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.plusicon),
-                contentDescription = "Add Event",
+                contentDescription = "Ajouter un événement",
                 tint = Color.White
             )
         }
@@ -77,35 +71,113 @@ fun EventsScreen() {
 }
 
 @Composable
-fun EventItem(eventName: String) {
+fun EventItem(event: Event, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+            .padding(vertical = 8.dp)
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Text(
+            text = event.title,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+/*
+package fr.isen.lucas.isensmartcompanion.screens
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.google.gson.Gson
+import fr.isen.lucas.isensmartcompanion.R
+import fr.isen.lucas.isensmartcompanion.models.Event
+
+@Composable
+fun EventsScreen(navController: NavController) {
+    // Liste des événements gérée localement
+    var events by remember { mutableStateOf(
+        listOf(
+            Event(1, "Soirée BDE", "Une soirée inoubliable organisée par le BDE !", "15 Mars 2025", "ISEN Toulon"),
+            Event(2, "Gala ISEN", "Le gala annuel de l'ISEN avec une ambiance chic et festive.", "25 Juin 2025", "Hôtel de Ville"),
+            Event(3, "Journée de Cohésion", "Une journée d'activités pour renforcer l'esprit d'équipe.", "5 Septembre 2025", "Parc Naturel"),
+            Event(4, "Hackathon ISEN", "Un hackathon intense de 48h pour innover en tech.", "12 Octobre 2025", "Campus ISEN"),
+            Event(5, "Tournoi e-Sport", "Compétition gaming avec des équipes de l'ISEN.", "20 Novembre 2025", "Salle de jeux")
+        )
+    )}
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.listlogo),
-                contentDescription = "Event Icon",
-                tint = Color.Black,
-                modifier = Modifier.size(32.dp)
+            Text(
+                text = "Événements ISEN",
+                fontSize = 24.sp,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            LazyColumn {
+                items(events) { event ->
+                    EventItem(event) {
+                        // Sérialiser l'événement en JSON avec Gson
+                        val eventJson = Gson().toJson(event)
+                        // Naviguer vers l'écran de détails avec l'événement
+                        navController.navigate("eventDetails/$eventJson")
+                    }
+                }
+            }
+        }
 
-            ClickableText(
-                text = AnnotatedString(eventName),
-                style = LocalTextStyle.current.copy(fontSize = 18.sp, fontWeight = FontWeight.Medium),
-                onClick = { /* Ajouter action pour chaque événement si besoin */ }
+        // Ajouter le bouton flottant "+" en bas à droite de l'écran
+        FloatingActionButton(
+            onClick = { navController.navigate("newEvent") }, // Navigation vers la page de création d'événement
+            modifier = Modifier
+                .align(Alignment.BottomEnd)  // Positionner le bouton en bas à droite
+                .padding(16.dp),
+            containerColor = Color.Red
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.plusicon),
+                contentDescription = "Ajouter un événement",
+                tint = Color.White
             )
         }
     }
 }
+
+
+@Composable
+fun EventItem(event: Event, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Text(
+            text = event.title,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+ */
