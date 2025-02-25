@@ -71,7 +71,7 @@ fun NewEvent(navController: NavController) {
             onClick = {
                 // Créer un nouvel événement
                 val newEvent = Event(
-                    id = (1..1000).random(), // ID généré aléatoirement pour l'exemple
+                    id = (1..1000).random().toString(), // ID généré aléatoirement pour l'exemple
                     title = title.text,
                     description = description.text,
                     date = date.text,

@@ -29,7 +29,6 @@ class EventDetailsActivity : ComponentActivity() {
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun EventDetailsScreen(event: Event) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
