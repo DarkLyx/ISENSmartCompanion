@@ -32,6 +32,8 @@ fun EventDetails(backStackEntry: NavBackStackEntry, navController: androidx.navi
             Text(text = "📅 ${it.date}", fontSize = 16.sp)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "📍 ${it.location}", fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Proposé par :  ${it.category}", fontSize = 16.sp)
         } ?: Text(text = "Événement introuvable", fontSize = 18.sp)
     }
 }

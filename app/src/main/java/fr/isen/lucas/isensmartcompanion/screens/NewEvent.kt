@@ -18,8 +18,10 @@ fun NewEvent(navController: NavController) {
     var description by remember { mutableStateOf(TextFieldValue("")) }
     var date by remember { mutableStateOf(TextFieldValue("")) }
     var location by remember { mutableStateOf(TextFieldValue("")) }
+    var category by remember { mutableStateOf(TextFieldValue("")) }
 
-    Column(
+
+        Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -57,6 +59,12 @@ fun NewEvent(navController: NavController) {
             label = { Text("Lieu") },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         )
+        TextField(
+            value = category,
+            onValueChange = { category = it },
+            label = { Text("Category") },
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+        )
 
         // Bouton pour ajouter l'événement
         Button(
@@ -67,7 +75,8 @@ fun NewEvent(navController: NavController) {
                     title = title.text,
                     description = description.text,
                     date = date.text,
-                    location = location.text
+                    location = location.text,
+                    category = category.text
                 )
                 // Vous pouvez ajouter l'événement à une base de données ici
                 navController.popBackStack() // Retourner à l'écran précédent après l'ajout

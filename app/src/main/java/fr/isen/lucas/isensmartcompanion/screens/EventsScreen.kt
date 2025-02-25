@@ -20,11 +20,11 @@ import fr.isen.lucas.isensmartcompanion.models.Event
 @Composable
 fun EventsScreen(navController: NavController) {
     val events = listOf(
-        Event(1, "Soirée BDE", "Une soirée inoubliable organisée par le BDE !", "15 Mars 2025", "ISEN Toulon"),
-        Event(2, "Gala ISEN", "Le gala annuel de l'ISEN avec une ambiance chic et festive.", "25 Juin 2025", "Hôtel de Ville"),
-        Event(3, "Journée de Cohésion", "Une journée d'activités pour renforcer l'esprit d'équipe.", "5 Septembre 2025", "Parc Naturel"),
-        Event(4, "Hackathon ISEN", "Un hackathon intense de 48h pour innover en tech.", "12 Octobre 2025", "Campus ISEN"),
-        Event(5, "Tournoi e-Sport", "Compétition gaming avec des équipes de l'ISEN.", "20 Novembre 2025", "Salle de jeux"),
+        Event(1, "Soirée BDE", "Une soirée inoubliable organisée par le BDE !", "15 Mars 2025", "ISEN Toulon", "BDE"),
+        Event(2, "Gala ISEN", "Le gala annuel de l'ISEN avec une ambiance chic et festive.", "25 Juin 2025", "Hôtel de Ville","BDE"),
+        Event(3, "Journée de Cohésion", "Une journée d'activités pour renforcer l'esprit d'équipe.", "5 Septembre 2025", "Parc Naturel", "ISEN"),
+        Event(4, "Hackathon ISEN", "Un hackathon intense de 48h pour innover en tech.", "12 Octobre 2025", "Campus ISEN", "ISEN Engineering"),
+        Event(5, "Tournoi e-Sport", "Compétition gaming avec des équipes de l'ISEN.", "20 Novembre 2025", "Salle de jeux", "BDS"),
     )
 
     Box(
@@ -51,21 +51,6 @@ fun EventsScreen(navController: NavController) {
                     }
                 }
             }
-        }
-
-        // Ajouter le bouton flottant "+" en bas à droite de l'écran
-        FloatingActionButton(
-            onClick = { /* Action pour ajouter un événement */ },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)  // Positionner le bouton en bas à droite
-                .padding(16.dp),
-            containerColor = Color.Red
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.plusicon),
-                contentDescription = "Ajouter un événement",
-                tint = Color.White
-            )
         }
     }
 }
