@@ -15,17 +15,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import fr.isen.lucas.isensmartcompanion.R
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(innerPadding: PaddingValues) {
     val context = LocalContext.current
     var textState by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.pink_background)),
+            .background(colorResource(id = R.color.pink_background))
+            .padding(innerPadding), // Ajout du padding pour éviter les chevauchements
         contentAlignment = Alignment.Center
     ) {
         Column(

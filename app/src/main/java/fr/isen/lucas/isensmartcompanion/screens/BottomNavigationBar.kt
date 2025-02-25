@@ -3,33 +3,20 @@ package fr.isen.lucas.isensmartcompanion.screens
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import fr.isen.lucas.isensmartcompanion.R
+import androidx.navigation.NavController
+import androidx.compose.foundation.layout.*
+import fr.isen.lucas.isensmartcompanion.TabBarItem
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
+fun BottomNavigationBar(tabBarItems: List<TabBarItem>, navController: NavController) {
     NavigationBar {
-        NavigationBarItem(
-            icon = { Icon(painterResource(id = R.drawable.homelogo), contentDescription = "Home") },
-            label = { Text("Home") },
-            selected = false,
-            onClick = { navController.navigate("home") }
-        )
-        NavigationBarItem(
-            icon = { Icon(painterResource(id = R.drawable.listlogo), contentDescription = "Events") },
-            label = { Text("Events") },
-            selected = false,
-            onClick = { navController.navigate("events") }
-        )
-        NavigationBarItem(
-            icon = { Icon(painterResource(id = R.drawable.historylogo), contentDescription = "History") },
-            label = { Text("History") },
-            selected = false,
-            onClick = { navController.navigate("history") }
-        )
+        tabBarItems.forEach { tab ->
+            NavigationBarItem(
+                icon = { Icon(imageVector = tab.selectedIcon, contentDescription = tab.title) },
+                label = { Text(tab.title) },
+                selected = false,
+                onClick = { navController.navigate(tab.title) }
+            )
+        }
     }
 }
-

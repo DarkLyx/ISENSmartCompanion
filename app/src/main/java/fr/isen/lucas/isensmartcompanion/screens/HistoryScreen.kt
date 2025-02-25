@@ -7,11 +7,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-
 @Composable
-fun HistoryScreen() {
+fun HistoryScreen(innerPadding: PaddingValues) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding), // Ajout du padding pour éviter le chevauchement avec la BottomNavigationBar
         contentAlignment = Alignment.Center
     ) {
         Text(text = "History Screen", fontSize = 24.sp, fontWeight = FontWeight.Bold)
