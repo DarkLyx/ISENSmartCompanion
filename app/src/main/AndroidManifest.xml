@@ -14,7 +14,7 @@
         android:theme="@style/Theme.ISENSmartCompanion"
         tools:targetApi="31">
         <activity
-            android:name=".screens.EventDetailsActivity"
+            android:name=".EventDetailsActivity"
             android:exported="false"
             android:label="EventDetailActivity"
             android:theme="@style/Theme.ISENSmartCompanion" />

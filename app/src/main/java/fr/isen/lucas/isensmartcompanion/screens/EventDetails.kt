@@ -15,22 +15,10 @@ import androidx.compose.ui.unit.sp
 import fr.isen.lucas.isensmartcompanion.R
 import fr.isen.lucas.isensmartcompanion.models.Event
 
-class EventDetailsActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        val event = intent.getParcelableExtra<Event>("event")
-
-        setContent {
-            if (event != null) {
-                EventDetailsScreen(event)
-            }
-        }
-    }
-}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventDetailsScreen(event: Event) {
+fun EventDetails(event: Event) {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
     Scaffold(
@@ -48,21 +36,20 @@ fun EventDetailsScreen(event: Event) {
             )
         }
     ) { paddingValues ->
-        EventDetails(event, Modifier.padding(paddingValues))
-    }
-}
-
-@Composable
-fun EventDetails(event: Event, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = event.title, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = event.description, fontSize = 18.sp)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "📅 ${event.date}", fontSize = 16.sp)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "📍 ${event.location}", fontSize = 16.sp)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "Proposé par : ${event.category}", fontSize = 16.sp)
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(16.dp)
+        ) {
+            Text(text = event.title, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = event.description, fontSize = 18.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "📅 ${event.date}", fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "📍 ${event.location}", fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Proposé par : ${event.category}", fontSize = 16.sp)
+        }
     }
 }

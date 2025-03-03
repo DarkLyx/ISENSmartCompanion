@@ -1,5 +1,6 @@
 package fr.isen.lucas.isensmartcompanion.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -22,22 +24,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.google.ai.client.generativeai.GenerativeModel
+import fr.isen.lucas.isensmartcompanion.models.Conversation
+import fr.isen.lucas.isensmartcompanion.screens.objects.MessageBubble
+import java.util.Date
 
-data class Message(val text: String, val isUser: Boolean)
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun HomeScreen(innerPadding: PaddingValues) {
     var textState by remember { mutableStateOf("") }
-    val messages = remember { mutableStateListOf<Message>() }
+    val messages = remember { mutableStateListOf<Conversation>() }
     val listState = rememberLazyListState()
     val conversationHistory = remember { mutableStateListOf<String>() }
     var chatTitle by remember { mutableStateOf("Nouvelle conversation") }
+    val context = LocalContext.current
 
     val model = remember {
         GenerativeModel(
             modelName = "gemini-1.5-flash",
-            apiKey = "AIzaSyC-zec56p3RBFzR1UCxHc208otAKWfYtVY" // Remplace par ta clé API
+            apiKey = "" // Remplace par ta clé API
         )
     }
 
@@ -45,7 +50,6 @@ fun HomeScreen(innerPadding: PaddingValues) {
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.pink_background)),
-           // .padding(innerPadding),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -124,12 +128,8 @@ fun HomeScreen(innerPadding: PaddingValues) {
                     onValueChange = { textState = it },
                     modifier = Modifier.weight(1f),
                     placeholder = { Text("Écris un message...") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+
                     )
-                )
                 Box(
                     modifier = Modifier
                         .size(48.dp)
@@ -140,19 +140,40 @@ fun HomeScreen(innerPadding: PaddingValues) {
                         onClick = {
                             if (textState.isNotBlank()) {
                                 val userMessage = textState
-                                messages.add(Message(userMessage, isUser = true))
+                                val currentDate = Date()  // Utiliser Date() pour obtenir la date actuelle
+
+                                // Ajouter le message de l'utilisateur (question)
+                                messages.add(
+                                    Conversation(
+                                        title = chatTitle,
+                                        date = currentDate,
+                                        question = userMessage,
+                                        answer = ""  // Réponse vide pour l'instant
+                                    )
+                                )
                                 conversationHistory.add("Utilisateur: $userMessage")
                                 textState = ""
+
+                                Toast.makeText(context, "Question submitted", Toast.LENGTH_SHORT).show()
 
                                 CoroutineScope(Dispatchers.IO).launch {
                                     val fullContext = conversationHistory.joinToString("\n")
                                     val response = model.generateContent(fullContext)
                                     val botResponse = response.text ?: "Je n'ai pas compris..."
 
-                                    messages.add(Message(botResponse, isUser = false))
+                                    // Ajouter la réponse de l'IA directement après le message de l'utilisateur
+                                    messages.add(
+                                        Conversation(
+                                            title = chatTitle,
+                                            date = currentDate,
+                                            question = "",  // Question vide pour la réponse de l'IA
+                                            answer = botResponse
+                                        )
+                                    )
+
                                     conversationHistory.add("IA: $botResponse")
 
-                                    // Génération du titre de conversation si c'est le premier message
+                                    // Générer le titre de la conversation si c'est le premier message
                                     if (messages.size == 2) {
                                         val titleResponse = model.generateContent("Génère un titre court résumant cette conversation :\n$fullContext")
                                         chatTitle = titleResponse.text ?: "Nouvelle conversation"
@@ -169,34 +190,9 @@ fun HomeScreen(innerPadding: PaddingValues) {
                             tint = if (textState.isNotBlank()) Color.White else Color.Gray
                         )
                     }
+
                 }
             }
-        }
-    }
-}
-
-// Affichage des messages avec style différent pour l'utilisateur et l'IA
-@Composable
-fun MessageBubble(message: Message) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        contentAlignment = if (message.isUser) Alignment.CenterEnd else Alignment.CenterStart
-    ) {
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (message.isUser) Color(0xFFBBDEFB) else Color(0xFFE0E0E0)
-            ),
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(
-                text = message.text,
-                modifier = Modifier.padding(12.dp),
-                fontSize = 16.sp,
-                color = Color.Black
-            )
         }
     }
 }

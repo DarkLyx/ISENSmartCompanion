@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.isen.lucas.isensmartcompanion.EventDetailsActivity
 import fr.isen.lucas.isensmartcompanion.models.Event
 import fr.isen.lucas.isensmartcompanion.services.EventApiService
 import kotlinx.coroutines.Dispatchers
