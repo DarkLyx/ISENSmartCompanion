@@ -1,6 +1,5 @@
 package fr.isen.lucas.isensmartcompanion.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,30 +18,32 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.room.Room
 import fr.isen.lucas.isensmartcompanion.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.google.ai.client.generativeai.GenerativeModel
+import fr.isen.lucas.isensmartcompanion.databases.AppDatabase
 import fr.isen.lucas.isensmartcompanion.models.Conversation
 import fr.isen.lucas.isensmartcompanion.screens.objects.MessageBubble
-import java.util.Date
-
-
-
 @Composable
 fun HomeScreen(innerPadding: PaddingValues) {
     var textState by remember { mutableStateOf("") }
     val messages = remember { mutableStateListOf<Conversation>() }
     val listState = rememberLazyListState()
-    val conversationHistory = remember { mutableStateListOf<String>() }
     var chatTitle by remember { mutableStateOf("Nouvelle conversation") }
     val context = LocalContext.current
+
+    val db = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java, "Conversation_DB"
+    ).build()
 
     val model = remember {
         GenerativeModel(
             modelName = "gemini-1.5-flash",
-            apiKey = "" // Remplace par ta clé API
+            apiKey = ""
         )
     }
 
@@ -57,7 +58,6 @@ fun HomeScreen(innerPadding: PaddingValues) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // En-tête avec le logo et le bouton "New Chat"
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,29 +74,22 @@ fun HomeScreen(innerPadding: PaddingValues) {
                 Button(
                     onClick = {
                         messages.clear()
-                        conversationHistory.clear()
                         chatTitle = "Nouvelle conversation"
                         textState = ""
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    colors = ButtonDefaults.buttonColors(containerColor =  colorResource(id = R.color.arrow_circle_color))
                 ) {
                     Text("New Chat", color = Color.White)
                 }
             }
-
             Spacer(modifier = Modifier.height(10.dp))
-
-            // Titre de la conversation généré par IA
             Text(
                 chatTitle,
                 fontSize = 20.sp,
                 color = Color.Black,
                 modifier = Modifier.padding(8.dp)
             )
-
             Spacer(modifier = Modifier.height(10.dp))
-
-            // Zone de conversation
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -114,8 +107,6 @@ fun HomeScreen(innerPadding: PaddingValues) {
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-
-            // Barre de saisie et bouton d'envoi
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -128,8 +119,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
                     onValueChange = { textState = it },
                     modifier = Modifier.weight(1f),
                     placeholder = { Text("Écris un message...") },
-
-                    )
+                )
                 Box(
                     modifier = Modifier
                         .size(48.dp)
@@ -140,40 +130,23 @@ fun HomeScreen(innerPadding: PaddingValues) {
                         onClick = {
                             if (textState.isNotBlank()) {
                                 val userMessage = textState
-                                val currentDate = Date()  // Utiliser Date() pour obtenir la date actuelle
-
-                                // Ajouter le message de l'utilisateur (question)
-                                messages.add(
-                                    Conversation(
-                                        title = chatTitle,
-                                        date = currentDate,
-                                        question = userMessage,
-                                        answer = ""  // Réponse vide pour l'instant
-                                    )
+                                val currentDate = System.currentTimeMillis()
+                                val conversation = Conversation(
+                                    title = chatTitle,
+                                    date = currentDate,
+                                    question = userMessage,
+                                    answer = ""
                                 )
-                                conversationHistory.add("Utilisateur: $userMessage")
+
                                 textState = ""
 
-                                Toast.makeText(context, "Question submitted", Toast.LENGTH_SHORT).show()
-
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val fullContext = conversationHistory.joinToString("\n")
+                                    val fullContext = messages.joinToString("\n") { it.question + "\n" + it.answer }
                                     val response = model.generateContent(fullContext)
                                     val botResponse = response.text ?: "Je n'ai pas compris..."
-
-                                    // Ajouter la réponse de l'IA directement après le message de l'utilisateur
-                                    messages.add(
-                                        Conversation(
-                                            title = chatTitle,
-                                            date = currentDate,
-                                            question = "",  // Question vide pour la réponse de l'IA
-                                            answer = botResponse
-                                        )
-                                    )
-
-                                    conversationHistory.add("IA: $botResponse")
-
-                                    // Générer le titre de la conversation si c'est le premier message
+                                    conversation.answer = botResponse
+                                    messages.add(conversation)
+                                    db.conversationDao().insert(conversation)
                                     if (messages.size == 2) {
                                         val titleResponse = model.generateContent("Génère un titre court résumant cette conversation :\n$fullContext")
                                         chatTitle = titleResponse.text ?: "Nouvelle conversation"

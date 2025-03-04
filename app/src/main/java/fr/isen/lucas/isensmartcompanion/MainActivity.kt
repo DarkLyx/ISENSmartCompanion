@@ -19,11 +19,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.isen.Gumuchian.isensmartcompanion.screens.objects.BottomNavigationBar
 import fr.isen.lucas.isensmartcompanion.models.TabBarItem
 import fr.isen.lucas.isensmartcompanion.screens.EventsScreen
 import fr.isen.lucas.isensmartcompanion.screens.HistoryScreen
+//import fr.isen.lucas.isensmartcompanion.screens.HistoryScreen
 import fr.isen.lucas.isensmartcompanion.screens.HomeScreen
-import fr.isen.lucas.isensmartcompanion.screens.objects.BottomNavigationBar
 import fr.isen.lucas.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 
 

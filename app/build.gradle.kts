@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -50,6 +51,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -66,9 +68,10 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.google.ai.client.generativeai:generativeai:0.2.0")
-    implementation(libs.androidx.room.common)
-    implementation(libs.androidx.room.ktx)
-
+    implementation ("androidx.room:room-runtime:2.6.1")  // La version stable la plus récente
+    annotationProcessor ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1") // KTX pour les extensions Kotlin
+    kapt ("androidx.room:room-compiler:2.6.1") // Remplace annotationProcessor par kapt
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -15,6 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.lucas.isensmartcompanion.models.Conversation
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 
 @Composable
@@ -36,7 +40,7 @@ fun MessageBubble(message: Conversation) {
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(
-                            text = message.date.toString(),
+                            text = convertToParisTime(message.date),
                             fontSize = 12.sp,
                             color = Color.Gray
                         )
@@ -59,7 +63,7 @@ fun MessageBubble(message: Conversation) {
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(
-                            text = message.date.toString(),
+                            text = convertToParisTime(message.date),
                             fontSize = 12.sp,
                             color = Color.Gray
                         )
@@ -73,4 +77,10 @@ fun MessageBubble(message: Conversation) {
             }
         }
     }
+}
+fun convertToParisTime(timestamp: Long): String {
+    val instant = Instant.ofEpochMilli(timestamp)  // Convertir le timestamp (Long) en Instant
+    val parisTime = instant.atZone(ZoneId.of("Europe/Paris"))  // Appliquer le fuseau horaire de Paris
+    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")  // Format de la date
+    return parisTime.format(formatter)  // Formater et retourner la date en chaîne
 }
