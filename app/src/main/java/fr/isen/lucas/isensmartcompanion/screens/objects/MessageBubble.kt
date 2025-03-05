@@ -1,5 +1,7 @@
 package fr.isen.lucas.isensmartcompanion.screens.objects
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,23 +20,22 @@ import fr.isen.lucas.isensmartcompanion.models.Conversation
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MessageBubble(message: Conversation) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
-        contentAlignment = if (message.question.isNotEmpty()) Alignment.CenterEnd else Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             if (message.question.isNotEmpty()) {
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFBBDEFB) // Bleu pour la question
+                        containerColor =  Color(0xFFBBDEFB)
                     ),
                     modifier = Modifier.padding(4.dp)
                 ) {
@@ -52,12 +53,11 @@ fun MessageBubble(message: Conversation) {
                     }
                 }
             }
-
             if (message.answer.isNotEmpty()) {
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFE0E0E0) // Gris pour la réponse
+                        containerColor = Color(0xFFE0E0E0)
                     ),
                     modifier = Modifier.padding(4.dp)
                 ) {
@@ -78,9 +78,11 @@ fun MessageBubble(message: Conversation) {
         }
     }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
 fun convertToParisTime(timestamp: Long): String {
-    val instant = Instant.ofEpochMilli(timestamp)  // Convertir le timestamp (Long) en Instant
-    val parisTime = instant.atZone(ZoneId.of("Europe/Paris"))  // Appliquer le fuseau horaire de Paris
-    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")  // Format de la date
-    return parisTime.format(formatter)  // Formater et retourner la date en chaîne
+    val instant = Instant.ofEpochMilli(timestamp)
+    val parisTime = instant.atZone(ZoneId.of("Europe/Paris"))
+    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")
+    return parisTime.format(formatter)
 }

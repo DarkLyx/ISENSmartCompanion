@@ -2,7 +2,6 @@ package fr.isen.lucas.isensmartcompanion.screens
 
 import android.content.Intent
 import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.lucas.isensmartcompanion.EventDetailsActivity
 import fr.isen.lucas.isensmartcompanion.models.Event
+import fr.isen.lucas.isensmartcompanion.screens.objects.EventItem
 import fr.isen.lucas.isensmartcompanion.services.EventApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,24 +22,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
-fun EventsScreen(innerPadding: PaddingValues) {
+fun EventsScreen() {
     val context = LocalContext.current
 
-    // États pour gérer les événements, le chargement et les erreurs
     var events by remember { mutableStateOf<List<Event>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    // Initialisation de Retrofit
-    val retrofit = remember {
+    val eventApiService = remember {
         Retrofit.Builder()
             .baseUrl("https://isen-smart-companion-default-rtdb.europe-west1.firebasedatabase.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(EventApiService::class.java)
     }
-    val eventApiService = remember { retrofit.create(EventApiService::class.java) }
 
-    // Charger les événements depuis l'API
     LaunchedEffect(Unit) {
         try {
             val response = withContext(Dispatchers.IO) { eventApiService.getEvents() }
@@ -63,8 +60,6 @@ fun EventsScreen(innerPadding: PaddingValues) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,19 +92,4 @@ fun EventsScreen(innerPadding: PaddingValues) {
     }
 }
 
-@Composable
-fun EventItem(event: Event, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Text(
-            text = event.title,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
+

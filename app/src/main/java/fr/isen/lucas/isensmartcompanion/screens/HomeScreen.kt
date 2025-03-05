@@ -1,5 +1,7 @@
 package fr.isen.lucas.isensmartcompanion.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,8 +29,10 @@ import com.google.ai.client.generativeai.GenerativeModel
 import fr.isen.lucas.isensmartcompanion.databases.AppDatabase
 import fr.isen.lucas.isensmartcompanion.models.Conversation
 import fr.isen.lucas.isensmartcompanion.screens.objects.MessageBubble
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen(innerPadding: PaddingValues) {
+fun HomeScreen() {
     var textState by remember { mutableStateOf("") }
     val messages = remember { mutableStateListOf<Conversation>() }
     val listState = rememberLazyListState()
@@ -43,7 +47,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
     val model = remember {
         GenerativeModel(
             modelName = "gemini-1.5-flash",
-            apiKey = ""
+            apiKey = "" //entrer la clé api
         )
     }
 
@@ -77,7 +81,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
                         chatTitle = "Nouvelle conversation"
                         textState = ""
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor =  colorResource(id = R.color.arrow_circle_color))
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.arrow_circle_color))
                 ) {
                     Text("New Chat", color = Color.White)
                 }
@@ -139,17 +143,26 @@ fun HomeScreen(innerPadding: PaddingValues) {
                                 )
 
                                 textState = ""
-
+                                messages.add(conversation)
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val fullContext = messages.joinToString("\n") { it.question + "\n" + it.answer }
-                                    val response = model.generateContent(fullContext)
-                                    val botResponse = response.text ?: "Je n'ai pas compris..."
-                                    conversation.answer = botResponse
-                                    messages.add(conversation)
-                                    db.conversationDao().insert(conversation)
-                                    if (messages.size == 2) {
-                                        val titleResponse = model.generateContent("Génère un titre court résumant cette conversation :\n$fullContext")
-                                        chatTitle = titleResponse.text ?: "Nouvelle conversation"
+                                    try {
+                                        val fullContext = messages.joinToString("\n") { it.question + "\n" + it.answer }
+                                        val response = model.generateContent(fullContext)
+                                        val botResponse = response.text ?: "Je n'ai pas compris..."
+
+                                        val updatedConversation = conversation.copy(answer = botResponse)
+                                        messages[messages.size - 1] = updatedConversation
+                                        db.conversationDao().insert(updatedConversation)
+
+                                        if (messages.size >=1) {
+                                            val titleResponse = model.generateContent("Génère un titre court résumant cette conversation :\n$fullContext")
+                                            chatTitle = titleResponse.text ?: "Nouvelle conversation"
+                                        }
+                                    } catch (e: Exception) {
+                                        val errorResponse = "Désolé, je n'ai pas pu répondre à cette question."
+                                        val updatedConversation = conversation.copy(answer = errorResponse)
+                                        messages[messages.size - 1] = updatedConversation
+                                        db.conversationDao().insert(updatedConversation)
                                     }
                                 }
                             }
@@ -163,7 +176,6 @@ fun HomeScreen(innerPadding: PaddingValues) {
                             tint = if (textState.isNotBlank()) Color.White else Color.Gray
                         )
                     }
-
                 }
             }
         }

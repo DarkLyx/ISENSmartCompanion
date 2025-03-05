@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -64,14 +65,15 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.navigation:navigation-compose:2.7.6")
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.google.ai.client.generativeai:generativeai:0.2.0")
-    implementation ("androidx.room:room-runtime:2.6.1")  // La version stable la plus récente
-    annotationProcessor ("androidx.room:room-compiler:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1") // KTX pour les extensions Kotlin
-    kapt ("androidx.room:room-compiler:2.6.1") // Remplace annotationProcessor par kapt
+    implementation(libs.androidx.navigation.compose)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.generativeai.v020)
+    implementation (libs.androidx.room.runtime)  // La version stable la plus récente
+    annotationProcessor (libs.androidx.room.compiler)
+    implementation (libs.androidx.room.ktx) // KTX pour les extensions Kotlin
+    kapt (libs.androidx.room.compiler) // Remplace annotationProcessor par kapt
+    implementation (libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -81,4 +83,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+=======
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.android) apply false
+>>>>>>> origin/master
 }
