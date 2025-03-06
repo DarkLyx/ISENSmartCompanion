@@ -47,7 +47,7 @@ fun HomeScreen() {
     val model = remember {
         GenerativeModel(
             modelName = "gemini-1.5-flash",
-            apiKey = "" //entrer la clé api
+            apiKey = ""
         )
     }
 
