@@ -10,6 +10,7 @@
     <string name="home">Home</string>
     <string name="events">Events</string>
     <string name="history">History</string>
+    <string name="agenda">agenda</string>
 
     <string name="isen_event">Événements ISEN</string>
 
@@ -25,6 +26,11 @@
     <string name="del_el">Supprimer</string>
     <string name="del_notif">Message supprimé</string>
     <string name="del_all_notif">Lucas</string>
+
+    <string name="AgendaTitle">Mon Agenda</string>
+    <string name="Courses">Mes cours</string>
+    <string name="Events">Evenement à venir</string>
+
 
 </resources>
 

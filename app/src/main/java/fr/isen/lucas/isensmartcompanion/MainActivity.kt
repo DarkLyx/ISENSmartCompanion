@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
@@ -23,12 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.isen.Gumuchian.isensmartcompanion.screens.objects.BottomNavigationBar
 import fr.isen.lucas.isensmartcompanion.models.TabBarItem
-import fr.isen.lucas.isensmartcompanion.screens.EventsScreen
-import fr.isen.lucas.isensmartcompanion.screens.HistoryScreen
-import fr.isen.lucas.isensmartcompanion.screens.HomeScreen
+import fr.isen.lucas.isensmartcompanion.screens.*
 import fr.isen.lucas.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
-
-
 
 class MainActivity : ComponentActivity() {
 
@@ -42,15 +40,16 @@ class MainActivity : ComponentActivity() {
             Log.d("MainActivity", "setContent called")
 
             val homeTab = TabBarItem(title = stringResource(id = R.string.home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
-            val eventsTab = TabBarItem(title = stringResource(id = R.string.events), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange, badgeAmount = 7)
+            val eventsTab = TabBarItem(title = stringResource(id = R.string.events), selectedIcon = Icons.Filled.Info, unselectedIcon = Icons.Outlined.Info, badgeAmount = 7)
             val historyTab = TabBarItem(title = stringResource(id = R.string.history), selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
+            val agendaTab = TabBarItem(title =  stringResource(id = R.string.agenda), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange)
 
-            val tabBarItems = listOf(homeTab, eventsTab, historyTab)
+            val tabBarItems = listOf(homeTab, eventsTab, historyTab, agendaTab)
 
             val navController = rememberNavController()
 
             ISENSmartCompanionTheme {
-                Scaffold( bottomBar = {
+                Scaffold(bottomBar = {
                     BottomNavigationBar(tabBarItems, navController)
                 },
                     modifier = Modifier.fillMaxSize(),
@@ -71,6 +70,10 @@ class MainActivity : ComponentActivity() {
                                 Log.d("MainActivity", "Navigating to HistoryScreen")
                                 HistoryScreen()
                             }
+                            composable(agendaTab.title) {
+                                Log.d("MainActivity", "Navigating to AgendaScreen")
+                                AgendaScreen()
+                            }
                         }
                     }
                 }
@@ -78,28 +81,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("MainActivity", "onStart called")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("MainActivity", "onResume called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("MainActivity", "onPause called")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("MainActivity", "onStop called")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("MainActivity", "onDestroy called")
-    }
+    // Override lifecycle methods...
 }
