@@ -16,7 +16,7 @@
 
     <string name="detail_event">Détails de l\'événement</string>
     <string name="notify_on">Notification activée</string>
-    <string name="notify_off">Activer la notification</string>
+        <string name="notify_off">Activer la notification</string>
 
     <string name="date">Date :</string>
     <string name="question">Question :</string>
