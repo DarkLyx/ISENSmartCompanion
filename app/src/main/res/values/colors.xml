@@ -10,4 +10,9 @@
     <color name="arrow_circle_color">#ffc41e21</color>
     <color name="text_area_color">#ffe1e2ec</color>
     <color name="pink_background">#FFFAF8FF</color>
+
+
+    <color name="background_color_dark">#121212</color>
+    <color name="text_color_dark">#FFFFFF</color>
+    <color name="button_color_dark">#FF4081</color>
 </resources>

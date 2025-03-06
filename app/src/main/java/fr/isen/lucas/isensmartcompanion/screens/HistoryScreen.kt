@@ -29,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun HistoryScreen(innerPadding: PaddingValues) {
+fun HistoryScreen() {
     val context = LocalContext.current
     val db = Room.databaseBuilder(
         context,
@@ -47,7 +47,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.pink_background)),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -62,7 +62,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
                 Text(
                     "Historique des Conversations",
                     fontSize = 20.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(8.dp)
                 )
 
@@ -77,7 +77,7 @@ fun HistoryScreen(innerPadding: PaddingValues) {
                     },
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .background( colorResource(id = R.color.arrow_circle_color), shape = RoundedCornerShape(50))
+                        .background(colorResource(id = R.color.arrow_circle_color), shape = RoundedCornerShape(20))
                         .padding(8.dp)
                 ) {
                     Image(

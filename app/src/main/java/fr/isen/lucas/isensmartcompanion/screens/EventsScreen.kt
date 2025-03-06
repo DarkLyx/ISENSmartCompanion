@@ -2,7 +2,7 @@ package fr.isen.lucas.isensmartcompanion.screens
 
 import android.content.Intent
 import android.util.Log
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,10 +11,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.lucas.isensmartcompanion.EventDetailsActivity
+import fr.isen.lucas.isensmartcompanion.R
 import fr.isen.lucas.isensmartcompanion.models.Event
+import fr.isen.lucas.isensmartcompanion.screens.objects.EventItem
 import fr.isen.lucas.isensmartcompanion.services.EventApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,24 +25,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
-fun EventsScreen(innerPadding: PaddingValues) {
+fun EventsScreen() {
     val context = LocalContext.current
 
-    // États pour gérer les événements, le chargement et les erreurs
     var events by remember { mutableStateOf<List<Event>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    // Initialisation de Retrofit
-    val retrofit = remember {
+    val eventApiService = remember {
         Retrofit.Builder()
             .baseUrl("https://isen-smart-companion-default-rtdb.europe-west1.firebasedatabase.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(EventApiService::class.java)
     }
-    val eventApiService = remember { retrofit.create(EventApiService::class.java) }
 
-    // Charger les événements depuis l'API
     LaunchedEffect(Unit) {
         try {
             val response = withContext(Dispatchers.IO) { eventApiService.getEvents() }
@@ -63,8 +63,7 @@ fun EventsScreen(innerPadding: PaddingValues) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,16 +72,28 @@ fun EventsScreen(innerPadding: PaddingValues) {
                 .padding(16.dp)
         ) {
             Text(
-                text = "Événements ISEN",
+                text =  stringResource(id = R.string.isen_event) ,
                 fontSize = 24.sp,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
             when {
-                isLoading -> CircularProgressIndicator()
-                errorMessage != null -> Text("Erreur : $errorMessage", color = MaterialTheme.colorScheme.error)
-                events.isEmpty() -> Text("Aucun événement disponible.")
-                else -> LazyColumn {
+                isLoading -> CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary
+                )
+                errorMessage != null -> Text(
+                    "Erreur : $errorMessage",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                events.isEmpty() -> Text(
+                    "Aucun événement disponible.",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                else -> LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     items(events) { event ->
                         EventItem(event) {
                             val intent = Intent(context, EventDetailsActivity::class.java).apply {
@@ -94,22 +105,5 @@ fun EventsScreen(innerPadding: PaddingValues) {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun EventItem(event: Event, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Text(
-            text = event.title,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(16.dp)
-        )
     }
 }
