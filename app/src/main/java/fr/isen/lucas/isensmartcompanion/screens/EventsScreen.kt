@@ -2,6 +2,7 @@ package fr.isen.lucas.isensmartcompanion.screens
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,9 +11,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.lucas.isensmartcompanion.EventDetailsActivity
+import fr.isen.lucas.isensmartcompanion.R
 import fr.isen.lucas.isensmartcompanion.models.Event
 import fr.isen.lucas.isensmartcompanion.screens.objects.EventItem
 import fr.isen.lucas.isensmartcompanion.services.EventApiService
@@ -60,6 +63,7 @@ fun EventsScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,16 +72,28 @@ fun EventsScreen() {
                 .padding(16.dp)
         ) {
             Text(
-                text = "Événements ISEN",
+                text =  stringResource(id = R.string.isen_event) ,
                 fontSize = 24.sp,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
             when {
-                isLoading -> CircularProgressIndicator()
-                errorMessage != null -> Text("Erreur : $errorMessage", color = MaterialTheme.colorScheme.error)
-                events.isEmpty() -> Text("Aucun événement disponible.")
-                else -> LazyColumn {
+                isLoading -> CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary
+                )
+                errorMessage != null -> Text(
+                    "Erreur : $errorMessage",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                events.isEmpty() -> Text(
+                    "Aucun événement disponible.",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                else -> LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     items(events) { event ->
                         EventItem(event) {
                             val intent = Intent(context, EventDetailsActivity::class.java).apply {
@@ -91,5 +107,3 @@ fun EventsScreen() {
         }
     }
 }
-
-

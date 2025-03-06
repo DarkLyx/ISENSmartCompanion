@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -40,9 +41,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             Log.d("MainActivity", "setContent called")
 
-            val homeTab = TabBarItem(title = "Home", selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
-            val eventsTab = TabBarItem(title = "Events", selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange, badgeAmount = 7)
-            val historyTab = TabBarItem(title = "History", selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
+            val homeTab = TabBarItem(title = stringResource(id = R.string.home), selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home)
+            val eventsTab = TabBarItem(title = stringResource(id = R.string.events), selectedIcon = Icons.Filled.DateRange, unselectedIcon = Icons.Outlined.DateRange, badgeAmount = 7)
+            val historyTab = TabBarItem(title = stringResource(id = R.string.history), selectedIcon = Icons.Filled.List, unselectedIcon = Icons.Outlined.List)
 
             val tabBarItems = listOf(homeTab, eventsTab, historyTab)
 

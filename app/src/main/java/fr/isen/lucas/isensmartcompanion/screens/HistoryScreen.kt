@@ -47,7 +47,7 @@ fun HistoryScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.pink_background)),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -62,7 +62,7 @@ fun HistoryScreen() {
                 Text(
                     "Historique des Conversations",
                     fontSize = 20.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(8.dp)
                 )
 
@@ -77,7 +77,7 @@ fun HistoryScreen() {
                     },
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .background( colorResource(id = R.color.arrow_circle_color), shape = RoundedCornerShape(20))
+                        .background(colorResource(id = R.color.arrow_circle_color), shape = RoundedCornerShape(20))
                         .padding(8.dp)
                 ) {
                     Image(

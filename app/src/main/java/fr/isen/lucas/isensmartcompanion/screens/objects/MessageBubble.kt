@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.MaterialTheme
+
 import fr.isen.lucas.isensmartcompanion.models.Conversation
 import java.time.Instant
 import java.time.ZoneId
@@ -35,7 +37,7 @@ fun MessageBubble(message: Conversation) {
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor =  Color(0xFFBBDEFB)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     modifier = Modifier.padding(4.dp)
                 ) {
@@ -43,12 +45,12 @@ fun MessageBubble(message: Conversation) {
                         Text(
                             text = convertToParisTime(message.date),
                             fontSize = 12.sp,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                         Text(
                             text = message.question,
                             fontSize = 16.sp,
-                            color = Color.Black
+                            color =  MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -57,7 +59,7 @@ fun MessageBubble(message: Conversation) {
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFE0E0E0)
+                        containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
                     ),
                     modifier = Modifier.padding(4.dp)
                 ) {
@@ -65,12 +67,12 @@ fun MessageBubble(message: Conversation) {
                         Text(
                             text = convertToParisTime(message.date),
                             fontSize = 12.sp,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                         )
                         Text(
                             text = message.answer,
                             fontSize = 16.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }

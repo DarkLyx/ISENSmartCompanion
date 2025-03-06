@@ -11,11 +11,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.lucas.isensmartcompanion.R
@@ -33,20 +33,19 @@ fun ConversationItem(conversation: Conversation, db: AppDatabase, onConversation
     val dateFormatter = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
     val formattedDate = dateFormatter.format(Date(conversation.date))
     val context = LocalContext.current
-    val deleteButtonColor = colorResource(id = R.color.arrow_circle_color)
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(Color.White, shape = RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
-        Text("Date : $formattedDate", fontSize = 14.sp, color = Color.Gray)
+        Text(stringResource(id = R.string.date)+ " $formattedDate", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
         Spacer(modifier = Modifier.height(5.dp))
-        Text("Question : ${conversation.question}", fontSize = 16.sp, color = Color.Black)
+        Text(stringResource(id = R.string.question)+" ${conversation.question}", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
         Spacer(modifier = Modifier.height(8.dp))
-        Text("Réponse : ${conversation.answer}", fontSize = 16.sp, color = Color.Black)
+        Text(stringResource(id = R.string.answer)+" ${conversation.answer}", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -63,9 +62,11 @@ fun ConversationItem(conversation: Conversation, db: AppDatabase, onConversation
                     }
                     Toast.makeText(context, "Message supprimé", Toast.LENGTH_SHORT).show()
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = deleteButtonColor)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                )
             ) {
-                Text("Supprimer")
+                Text(stringResource(id = R.string.del_el), color = MaterialTheme.colorScheme.onError)
             }
         }
     }
