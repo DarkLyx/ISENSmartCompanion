@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import fr.isen.lucas.isensmartcompanion.models.Event
 import fr.isen.lucas.isensmartcompanion.screens.EventDetails
+import fr.isen.lucas.isensmartcompanion.ui.theme.ISENSmartCompanionTheme
 
 class EventDetailsActivity : ComponentActivity() {
 
@@ -16,8 +17,10 @@ class EventDetailsActivity : ComponentActivity() {
         val event = intent.getParcelableExtra<Event>("event")
 
         setContent {
-            if (event != null) {
-                EventDetails(event)
+            ISENSmartCompanionTheme {
+                if (event != null) {
+                    EventDetails(event)
+                }
             }
         }
     }

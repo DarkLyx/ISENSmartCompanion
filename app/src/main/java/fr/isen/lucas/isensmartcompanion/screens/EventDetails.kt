@@ -30,6 +30,7 @@ import fr.isen.lucas.isensmartcompanion.models.Event
 import java.util.concurrent.TimeUnit
 import android.util.Log
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +46,7 @@ fun EventDetails(event: Event) {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Détails de l'événement",
+                        text =  stringResource(id = R.string.detail_event) ,
                     color = Color.White,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -71,10 +72,10 @@ fun EventDetails(event: Event) {
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            Text(text = event.title, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(text = event.title, fontSize = 24.sp, fontWeight = FontWeight.Bold,  color = MaterialTheme.colorScheme.secondary)
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text(text = event.description, fontSize = 16.sp, lineHeight = 24.sp)
+            Text(text = event.description, fontSize = 16.sp, lineHeight = 24.sp,  color = MaterialTheme.colorScheme.secondary)
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(text = "📅 ${event.date}", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
@@ -108,7 +109,7 @@ fun EventDetails(event: Event) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (isNotified) "Notification activée" else "Activer la notification",
+                    text = if (isNotified)  stringResource(id = R.string.notify_on)  else stringResource(id = R.string.notify_off) ,
                     color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
@@ -132,7 +133,7 @@ fun cancelNotification(context: Context, eventId: String) {
     val workManager = WorkManager.getInstance(context)
     workManager.cancelAllWorkByTag(eventId)
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    notificationManager.cancel(1) // Annuler la notification avec l'ID 1
+    notificationManager.cancel(1)
 }
 
 class NotificationWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {

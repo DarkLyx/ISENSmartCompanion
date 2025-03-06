@@ -2,4 +2,29 @@
     <string name="app_name">ISENSmartCompanion</string>
     <string name="name">Lucas</string>
     <string name="isen_logo">logo</string>
+
+    <string name="new_chat">New Chat</string>
+    <string name="new_conv">Nouvelle conversation</string>
+    <string name="place_holder">Écris un message...</string>
+
+    <string name="home">Home</string>
+    <string name="events">Events</string>
+    <string name="history">History</string>
+
+    <string name="isen_event">Événements ISEN</string>
+
+
+    <string name="detail_event">Détails de l\'événement</string>
+    <string name="notify_on">Notification activée</string>
+    <string name="notify_off">Activer la notification</string>
+
+    <string name="date">Date :</string>
+    <string name="question">Question :</string>
+    <string name="answer">Réponse :</string>
+
+    <string name="del_el">Supprimer</string>
+    <string name="del_notif">Message supprimé</string>
+    <string name="del_all_notif">Lucas</string>
+
 </resources>
+

@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.room.Room
@@ -29,7 +29,6 @@ import com.google.ai.client.generativeai.GenerativeModel
 import fr.isen.lucas.isensmartcompanion.databases.AppDatabase
 import fr.isen.lucas.isensmartcompanion.models.Conversation
 import fr.isen.lucas.isensmartcompanion.screens.objects.MessageBubble
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen() {
@@ -37,6 +36,7 @@ fun HomeScreen() {
     val messages = remember { mutableStateListOf<Conversation>() }
     val listState = rememberLazyListState()
     var chatTitle by remember { mutableStateOf("Nouvelle conversation") }
+    val chatbase= stringResource(id = R.string.new_conv)
     val context = LocalContext.current
 
     val db = Room.databaseBuilder(
@@ -47,14 +47,14 @@ fun HomeScreen() {
     val model = remember {
         GenerativeModel(
             modelName = "gemini-1.5-flash",
-            apiKey = "" //entrer la clé api
+            apiKey = ""
         )
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.pink_background)),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -78,26 +78,26 @@ fun HomeScreen() {
                 Button(
                     onClick = {
                         messages.clear()
-                        chatTitle = "Nouvelle conversation"
+                        chatTitle = chatbase
                         textState = ""
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.arrow_circle_color))
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("New Chat", color = Color.White)
+                    Text(stringResource(id = R.string.new_chat), color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 chatTitle,
                 fontSize = 20.sp,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(8.dp)
             )
             Spacer(modifier = Modifier.height(10.dp))
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .background(Color.White, RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
                     .padding(8.dp)
             ) {
                 LazyColumn(
@@ -114,7 +114,7 @@ fun HomeScreen() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colorResource(id = R.color.text_area_color), shape = RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
                     .padding(horizontal = 16.dp, vertical = 3.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -122,12 +122,12 @@ fun HomeScreen() {
                     value = textState,
                     onValueChange = { textState = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Écris un message...") },
+                    placeholder = { Text( stringResource(id = R.string.place_holder) ) },
                 )
                 Box(
                     modifier = Modifier
                         .size(48.dp)
-                        .background(colorResource(id = R.color.arrow_circle_color), shape = CircleShape),
+                        .background(MaterialTheme.colorScheme.primary, shape = CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     IconButton(
@@ -154,7 +154,7 @@ fun HomeScreen() {
                                         messages[messages.size - 1] = updatedConversation
                                         db.conversationDao().insert(updatedConversation)
 
-                                        if (messages.size >=1) {
+                                        if (messages.size >= 1) {
                                             val titleResponse = model.generateContent("Génère un titre court résumant cette conversation :\n$fullContext")
                                             chatTitle = titleResponse.text ?: "Nouvelle conversation"
                                         }
@@ -173,7 +173,7 @@ fun HomeScreen() {
                         Icon(
                             painter = painterResource(id = R.drawable.arrowforward),
                             contentDescription = "Send",
-                            tint = if (textState.isNotBlank()) Color.White else Color.Gray
+                            tint = if (textState.isNotBlank()) MaterialTheme.colorScheme.onPrimary else Color.Gray
                         )
                     }
                 }
